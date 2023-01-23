@@ -6,6 +6,7 @@ import { HiVolumeUp, HiVolumeOff } from "react-icons/hi";
 import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { GoVerified } from "react-icons/go";
 import { BsPlay } from "react-icons/bs";
+import TimeAgo from "timeago-react";
 
 
 const VideoCard = ({ post }: any) => {
@@ -35,14 +36,14 @@ const VideoCard = ({ post }: any) => {
 	}, [isVideoMuted]);
 
 	
-
+	// console.log(post)
 
   return (
 		<div className="border-b-2 pb-10 flex flex-col">
 			<div className="flex space-x-4">
 				{/* left */}
 				<div className=" rounded-full mt-2">
-					<Link href={`/profile/${post?.id}`}>
+					<Link href={`/profile/${post?.data?.uid}`}>
 						<div className="w-16 h-16">
 							<img
 								src={post?.data?.userImg}
@@ -55,17 +56,23 @@ const VideoCard = ({ post }: any) => {
 
 				{/* right */}
 				<div className="flex flex-col p-2 space-y-3">
-					<div className="flex flex-col sm:flex-row items-start sm:items-center sm:space-x-2">
-						<h3 className="flex items-center gap-2 text-md font-semibold md:text-xl">
-							{post?.data?.name}
-							<GoVerified className="text-blue-500" />
-						</h3>
-						<p className="flex items-center space-x-1">
-							<span className="text-gray-500">
-								{post?.data?.username}
-								{post?.data?.uid.slice(0, 4)}
-							</span>
-						</p>
+					<div className="flex justify-between">
+						<div className="flex flex-col">
+							<h3 className="flex items-center gap-2 text-md font-semibold md:text-xl">
+								{post?.data?.name}
+								<GoVerified className="text-blue-500" />
+							</h3>
+							<p className="flex items-center space-x-1">
+								<span className="text-gray-500">
+									{post?.data?.username}
+									{post?.data?.uid.slice(0, 4)}
+								</span>
+							</p>
+						</div>
+
+						<div className="hidden md:inline text-gray-500 text-md mt-2">
+							<TimeAgo datetime={post?.data?.timestamp.toDate()} />
+						</div>
 					</div>
 
 					<p className="text-xl">{post?.data?.caption}</p>

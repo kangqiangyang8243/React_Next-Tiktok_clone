@@ -13,6 +13,7 @@ import Link from 'next/link';
 import Comments from '../../components/Comment';
 import { useSession } from 'next-auth/react';
 import LikeBtn from '../../components/LikeBtn';
+import TimeAgo from "timeago-react";
 
 function Detail() {
   const router = useRouter();
@@ -87,7 +88,7 @@ function Detail() {
           {isHover && (
             <p
               className='cursor-pointer w-8 h-8 rounded-full absolute z-40 top-5 left-1'
-              onClick={() => router.back()}>
+              onClick={() => router.push("/")}>
               <MdOutlineCancel className='text-white text-center text-[35px] hover:opacity-90' />
             </p>
           )}
@@ -140,26 +141,32 @@ function Detail() {
         {/* top */}
         <div className='space-y-10 px-10 py-5 border-b-2 h-[40%]'>
           <Link href={`/profile/${videoAssest?.uid}`}>
-            <div className='flex items-center space-x-2'>
-              {/* left */}
-              <img
-                src={videoAssest?.userImg}
-                alt="userImg"
-                className='w-12 h-12 rounded-full cursor-pointer'
-              />
+            <div className='flex '>
+              <div className='flex space-x-2 w-full'>
+                {/* left */}
+                <img
+                  src={videoAssest?.userImg}
+                  alt="userImg"
+                  className='w-12 h-12 rounded-full cursor-pointer'
+                />
 
-              {/* right */}
-              <div className="flex flex-col lg:flex-row items-start lg:items-center lg:space-x-2">
-                <h3 className="flex items-center gap-2 text-sm font-semibold lg:text-lg">
-                  {videoAssest?.name}
-                  <GoVerified className="text-blue-500" />
-                </h3>
-                <p className="flex items-center space-x-1">
-                  <span className="text-gray-500">
-                    {videoAssest?.username}
-                    {videoAssest?.uid.slice(0, 4)}
-                  </span>
-                </p>
+                {/* right */}
+                <div className="flex flex-col items-start flex-grow">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold lg:text-lg">
+                    {videoAssest?.name}
+                    <GoVerified className="text-blue-500" />
+                  </h3>
+                  <p className="flex items-center space-x-1">
+                    <span className="text-gray-500">
+                      {videoAssest?.username}
+                      {videoAssest?.uid.slice(0, 4)}
+                    </span>
+                  </p>
+                </div>
+
+                <div className='text-gray-500 text-sm mt-2'>
+                  <TimeAgo datetime={videoAssest?.timestamp.toDate()} />
+                </div>
               </div>
             </div>
           </Link>

@@ -4,7 +4,8 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase';
 import { GoVerified } from "react-icons/go";
-
+import { toast } from 'react-toastify';
+import TimeAgo from "timeago-react"; 
 function Comments({ id }) {
 	const { data: session } = useSession();
 	const [comments, setcomments] = useState([]);
@@ -12,33 +13,31 @@ function Comments({ id }) {
 // console.log(id)
 
 	useEffect(() => {
-		if (id) { 
-		const getData = async () => {
-			const q = query(
-				collection(db, "tiktot_posts", id, 		"comments"),
-				orderBy("timestamp", "desc")
+	
+		if (id) {
+				const unsubscribe = onSnapshot(
+					query(
+						collection(db, "tiktot_posts", id, "comments"),
+						orderBy("timestamp", "desc")
+					),
+					(snapshot) => {
+						const list = [];
+						 snapshot.forEach((doc) => {
+							 list.push(doc.data());
+							 setcomments(list);
+						});
+					}
 			);
 			
-			const querySnapshot = await getDocs(q);
-			
-			let commentUpdates = [];
-			querySnapshot.forEach((doc) => {
-				return commentUpdates.push({
-					id: doc.id,
-					data: doc.data(),
-				});
-			});
+			return ()=>unsubscribe;
+			}
+
 		
-	setcomments(commentUpdates);
-};
-
-getData();
-
-		}
 		
 	}, [db,id]);
 	
-  const sendComment = async () => {
+	const sendComment = async (e) => {
+		e.preventDefault()
     const collRef = collection(db, "tiktot_posts", id, "comments");
 		if (session) {
 			await addDoc(collRef, {
@@ -56,58 +55,63 @@ getData();
     
 	};
 
-	console.log(comments)
+	// console.log(comments)
 	return (
 		<div className="bg-gray-100 h-full flex flex-col justify-between relative">
-				{/* top */}
-				<div className='lg:h-[300px] xl:h-[350px] 2xl:h-[500px] overflow-y-scroll pl-2'> 
-					{comments.map((comments) => (
-						<div className="flex flex-col p-4 border-b-2">
-							<Link href={`/profile/${comments?.data?.userId}`}>
-								<div className="flex items-center space-x-2">
+			{/* top */}
+			<div className="lg:h-[300px] xl:h-[350px] 2xl:h-[500px] overflow-y-scroll pl-2 pb-10">
+				{comments.map((comment) => (
+					<div key={comment.id} className="flex flex-col p-4 border-b-2">
+						<Link href={`/profile/${comment?.userId}`}>
+							<div className="flex items-center">
+								<div className="flex space-x-2 mb-2 w-full">
 									{/* left */}
 									<img
-										src={comments?.data?.userImg}
+										src={comment?.userImg}
 										alt="userImg"
 										className="w-12 h-12 rounded-full cursor-pointer"
 									/>
 
 									{/* right */}
-									<div className="flex flex-col lg:flex-row items-start lg:items-center lg:space-x-2">
+									<div className="flex flex-col  items-start flex-grow">
 										<h3 className="flex items-center gap-2 text-sm font-semibold lg:text-lg">
-											{comments?.data?.name}
+											{comment?.name}
 											<GoVerified className="text-blue-500" />
 										</h3>
-										<p className="flex items-center space-x-1">
-											<span className="text-gray-500">
-												{comments?.data?.username}
-												{comments?.data?.userId.slice(0, 4)}
-											</span>
+
+										<p className="text-gray-500">
+											{comment?.username}
+											{comment?.userId?.slice(0, 4)}
 										</p>
 									</div>
-								</div>
-							</Link>
 
-							{/* comment */}
-							<p className="ml-14 text-xl">{comments?.data?.comment}</p>
-						</div>
-					))}
+									<div className='text-gray-500 text-sm mt-2'>
+										<TimeAgo datetime={comment?.timestamp.toDate()} />
+									</div>
+								</div>
+							</div>
+						</Link>
+
+						{/* comment */}
+						<p className="ml-14 text-xl">{comment?.comment}</p>
+					</div>
+				))}
 			</div>
-			
+
 			{/* bottom */}
-			<div className="w-full h-12 flex items-center justify-center bg-white absolute bottom-0">
-				<div className="w-[70%] flex items-center">
+			<div className="w-full h-12 flex items-center justify-center bg-white fixed bottom-0">
+				<form onSubmit={sendComment} className="w-[70%] flex items-center">
 					<input
 						type="text"
 						placeholder="Input your comment..."
-						className="w-full px-3 py-1 bg-transparent rounded-md border border-gray-300 outline-none"
+						className="w-full px-3 py-1 bg-transparent rounded-md border border-gray-300 outline-none focus:shadow-lg"
 						value={message}
 						onChange={(e) => setmessage(e.target.value)}
 					/>
-					<button onClick={sendComment} className="text-gray-500 ml-2 text-sm">
+					<button type="submit" className="text-gray-500 ml-2 text-sm">
 						Send
 					</button>
-				</div>
+				</form>
 			</div>
 		</div>
 	);
