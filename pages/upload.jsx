@@ -71,7 +71,7 @@ const Upload = () => {
         userImg: session.user?.image,
         caption: caption,
 				topic: topic,
-				video:videoURL,
+				video: videoURL,
         timestamp: serverTimestamp(),
       });
 

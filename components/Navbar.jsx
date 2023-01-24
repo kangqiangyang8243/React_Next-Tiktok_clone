@@ -1,15 +1,39 @@
 import Link from "next/link";
-import React from "react";
+import React,{useEffect, useState} from "react";
 import { AiOutlineLogout } from "react-icons/ai";
 import { BiSearch } from "react-icons/bi";
 import { IoMdAdd } from "react-icons/io";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { FcGoogle } from 'react-icons/fc';
 import { useRouter } from "next/router";
+import { doc, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const Navbar = () => {
 	const { data: session } = useSession();
 	const router = useRouter();
+	
+	
+
+	useEffect(() => {
+		if (session) {
+			const sendUser = async () => {
+				await setDoc(doc(db, 'tiktot_users', session.user?.uid), {
+					id: session.user?.uid,
+					username: session.user?.username,
+					name: session.user?.name,
+					email: session.user?.email,
+					userImg: session.user?.image,
+					timestamp:serverTimestamp()
+				});
+			}
+
+			sendUser();
+		}
+
+		
+	}, [session]);
+
 
 	
 	const signin = async() => {
@@ -55,7 +79,7 @@ const Navbar = () => {
 
 					<Link href="/">
 						<img
-							src={session.user?.image || ""}
+							src={session.user?.image}
 							className="w-10 h-10 border cursor-pointer rounded-full"
 							onClick={() => signOut()}
 						/>
