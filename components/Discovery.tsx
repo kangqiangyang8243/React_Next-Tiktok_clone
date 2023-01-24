@@ -15,6 +15,7 @@ const Discovery = () => {
 							className="flex items-center space-x-2 bg-transparent lg:border-2 px-2 lg:px-3 py-2 rounded-full  cursor-pointer hover:bg-gray-200">
 							<h4 className="text-2xl lg:text-base">{topic.icon}</h4>
 							<span className="hidden lg:inline">{topic.name}</span>
+							
 						</div>
 					</Link>
 				))}

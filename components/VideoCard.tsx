@@ -7,6 +7,7 @@ import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { GoVerified } from "react-icons/go";
 import { BsPlay } from "react-icons/bs";
 import TimeAgo from "timeago-react";
+import { useRouter } from 'next/router';
 
 
 const VideoCard = ({ post }: any) => {
@@ -15,8 +16,6 @@ const VideoCard = ({ post }: any) => {
   const [isVideoMuted, setIsVideoMuted] = useState<boolean>(false);
 	const [playing, setPlaying] = useState<boolean>(false);
 	
-	
-// console.log(post)
 
   const onVideoPress = () => {
     if (playing) {

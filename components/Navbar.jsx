@@ -6,30 +6,46 @@ import { IoMdAdd } from "react-icons/io";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { FcGoogle } from 'react-icons/fc';
 import { useRouter } from "next/router";
-import { doc, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
+
 import { db } from "../firebase";
+import { collection, query, where, getDocs,doc,serverTimestamp, setDoc } from "firebase/firestore";
 
 const Navbar = () => {
 	const { data: session } = useSession();
 	const router = useRouter();
-	
-	
+	const [Input, setInput] = useState("");
+	const [users, setusers] = useState([])
+	const [search, setsearch] = useState([])
 
 	useEffect(() => {
 		if (session) {
 			const sendUser = async () => {
-				await setDoc(doc(db, 'tiktot_users', session.user?.uid), {
+				await setDoc(doc(db, 'tiktot_users', session.user.uid), {
 					id: session.user?.uid,
 					username: session.user?.username,
 					name: session.user?.name,
 					email: session.user?.email,
 					userImg: session.user?.image,
-					timestamp:serverTimestamp()
+					timestamp: serverTimestamp()
 				});
 			}
 
 			sendUser();
-		}
+
+		}	
+
+		const getUser = async () => {
+			const q = query(collection(db, "tiktot_users"));
+			const querySnapshot = await getDocs(q);
+			let user = [];
+			querySnapshot.forEach((doc) => {
+				user.push({ ...doc.data(), id: doc.id });
+				setusers(user);
+			});
+		};
+				getUser();
+
+		
 
 		
 	}, [session]);
@@ -40,6 +56,19 @@ const Navbar = () => {
 		await signIn();
 
 	}
+
+	const handleSearch = async(e) => {
+		e.preventDefault();
+
+		setsearch(users?.filter((user) => user.username.toLowerCase().includes(Input)));
+
+	};
+
+		
+	console.log(search);
+		
+
+	
 	
 
 	
@@ -55,8 +84,12 @@ const Navbar = () => {
 			</Link>
 
 			{/* middle */}
-			<form className="bg-gray-200  hidden md:inline-flex items-center p-2 rounded-full space-x-2 w-[30%]">
+			<form
+				onSubmit={handleSearch}
+				className="bg-gray-200  hidden md:inline-flex items-center p-2 rounded-full space-x-2 w-[30%]">
 				<input
+					value={Input}
+					onChange={(e)=>setInput(e.target.value)}
 					type="text"
 					placeholder="Search"
 					className="outline-none bg-transparent pl-2 border-r-2 border-gray-300 w-full"
@@ -81,12 +114,13 @@ const Navbar = () => {
 						<img
 							src={session.user?.image}
 							className="w-10 h-10 border cursor-pointer rounded-full"
-							onClick={() => signOut()}
+							onClick={() => router.push(`/profile/${session.user?.uid}`)}
 						/>
 					</Link>
 
 					<button
 						type="button"
+						onClick={() => signOut()}
 						className=" border-2 p-2 rounded-full cursor-pointer outline-none shadow-md">
 						<AiOutlineLogout color="red" fontSize={21} />
 					</button>

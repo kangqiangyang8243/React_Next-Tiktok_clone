@@ -6,6 +6,7 @@ import { db } from '../firebase';
 import { GoVerified } from "react-icons/go";
 import { toast } from 'react-toastify';
 import TimeAgo from "timeago-react"; 
+import NoResult from './NoResult';
 function Comments({ id }) {
 	const { data: session } = useSession();
 	const [comments, setcomments] = useState([]);
@@ -59,8 +60,9 @@ function Comments({ id }) {
 	return (
 		<div className="bg-gray-100 h-[58vh] flex flex-col justify-between relative">
 			{/* top */}
-			<div className="lg:h-[300px] xl:h-[350px] 2xl:h-[500px] overflow-y-scroll pl-2 pb-10">
-				{comments.map((comment) => (
+			{comments?.length > 0 ? (
+				<div className="lg:h-[300px] xl:h-[350px] 2xl:h-[500px] overflow-y-scroll pl-2 pb-10">
+				{comments?.map((comment) => (
 					<div key={comment.id} className="flex flex-col p-4 border-b-2">
 						<Link href={`/profile/${comment?.userId}`}>
 							<div className="flex items-center">
@@ -86,7 +88,7 @@ function Comments({ id }) {
 									</div>
 
 									<div className='text-gray-500 text-sm mt-2'>
-										<TimeAgo datetime={comment?.timestamp.toDate()} />
+										<TimeAgo datetime={comment?.timestamp?.toDate()} />
 									</div>
 								</div>
 							</div>
@@ -97,6 +99,9 @@ function Comments({ id }) {
 					</div>
 				))}
 			</div>
+			) : (
+					<NoResult text="No Comment!"/>
+			)}
 
 			{/* bottom */}
 			<div className="w-full h-12 pt-3 flex items-center justify-center bg-white sticky bottom-2">

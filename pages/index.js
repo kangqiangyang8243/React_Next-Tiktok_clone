@@ -5,40 +5,81 @@ import VideoCard from '../components/VideoCard'
 import { db } from "../firebase";
 import {
 	collection,
-	query,
+	query as querys,
 	getDocs,
 	orderBy,
+	where,
 } from "firebase/firestore";
 import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
+import { useRouter } from 'next/router';
 
 
 
 const Home = () => {
 	const [videoAssest, setVideoAssest] = useState();
 
+	const { query } = useRouter();
+
+	// console.log(query)
+
+	// console.log(post)
+
+	// useEffect(() => {
+	// 	if (query.topic) {
+
+	// 	}
+	// }, [query]);
+
 	useEffect(() => {
 
-		const getData = async () => {
-			const q = query(
-				collection(db, "tiktot_posts"), orderBy("timestamp", "desc")
-			);
+		if (query.topic) {
+			const getData = async () => {
+				setVideoAssest([]);
+				const q = querys(
+					collection(db, "tiktot_posts"), where("topic", '==', query.topic), orderBy("timestamp", "desc")
+				);
 
-			const querySnapshot = await getDocs(q);
+				const querySnapshot = await getDocs(q);
 
-			let videos = [];
-			querySnapshot.forEach((doc) => {
-				return videos.push({
-					id: doc.id,
-					data: doc.data(),
+				let videos = [];
+				querySnapshot.forEach((doc) => {
+					return videos.push({
+						id: doc.id,
+						data: doc.data(),
+					});
 				});
-			});
 
-			setVideoAssest(videos);
-		};
+				setVideoAssest(videos);
+			};
 
-		getData();
-	}, [db]);
+			getData();
+		}
+		else {
+
+			const getData = async () => {
+				setVideoAssest([]);
+
+				const q = querys(
+					collection(db, "tiktot_posts"), orderBy("timestamp", "desc")
+				);
+
+				const querySnapshot = await getDocs(q);
+
+				let videos = [];
+				querySnapshot.forEach((doc) => {
+					return videos.push({
+						id: doc.id,
+						data: doc.data(),
+					});
+				});
+
+				setVideoAssest(videos);
+			};
+
+			getData();
+		}
+	}, [db, query]);
 
 	// console.log(videoAssest);
 	return (
