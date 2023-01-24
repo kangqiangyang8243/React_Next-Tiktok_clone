@@ -45,6 +45,7 @@ function Detail() {
   }, [query]);
 
 
+
   useEffect(() => {
     if (videoRef?.current) {
       videoRef.current.muted = isMuted;

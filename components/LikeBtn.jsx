@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDocs, onSnapshot, query, serverTimestamp, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase';
@@ -32,19 +32,16 @@ function LikeBtn({ id }) {
 
 
 	useEffect(() => { 
-const q = query(collection(db, "tiktot_posts"));
+		if (id) {
+			const unsub = onSnapshot(doc(db, "tiktot_posts", id), (doc) => {
+				setVideos({...doc.data(),videoId:doc.id});
+		})
 
-const unVideosubscribe = onSnapshot(q, (querySnapshot) => {
-	const video = [];
-	querySnapshot.forEach((doc) => {
-		video.push({ ...doc.data(), videoId: doc.id });
-		setVideos(video);
-	});
-});
-		return unVideosubscribe;
-	}, [db]);
+			
+		}
+	}, [db,id]);
 	
-	console.log(videos);
+	// console.log(videos);
 
 	useEffect(() => {
 		
@@ -70,10 +67,11 @@ const unVideosubscribe = onSnapshot(q, (querySnapshot) => {
 					}
 				);
 
-				await setDoc(doc(db, "tiktot_likes", session?.user?.uid), {
-					videoId: videos.videoId || null,
-					video: videos.video || null,
-					caption: videos.caption || null,
+				await addDoc(collection(db, "tiktot_likes"), {
+					videoId: videos.videoId ,
+					video: videos.video,
+					caption: videos.caption,
+					userId: session.user.uid,
 					timestamp: serverTimestamp(),
 				});
 			}

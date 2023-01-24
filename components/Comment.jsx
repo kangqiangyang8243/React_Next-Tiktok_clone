@@ -57,7 +57,7 @@ function Comments({ id }) {
 
 	// console.log(comments)
 	return (
-		<div className="bg-gray-100 h-full flex flex-col justify-between relative">
+		<div className="bg-gray-100 h-[58vh] flex flex-col justify-between relative">
 			{/* top */}
 			<div className="lg:h-[300px] xl:h-[350px] 2xl:h-[500px] overflow-y-scroll pl-2 pb-10">
 				{comments.map((comment) => (
@@ -99,8 +99,8 @@ function Comments({ id }) {
 			</div>
 
 			{/* bottom */}
-			<div className="w-full h-12 flex items-center justify-center bg-white fixed bottom-0">
-				<form onSubmit={sendComment} className="w-[70%] flex items-center">
+			<div className="w-full h-12 pt-3 flex items-center justify-center bg-white sticky bottom-2">
+				<form onSubmit={sendComment} className="w-[60%] flex items-center">
 					<input
 						type="text"
 						placeholder="Input your comment..."

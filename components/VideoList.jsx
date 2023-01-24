@@ -1,66 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { db } from '../firebase';
-import { collection, query, where, onSnapshot, getDocs } from "firebase/firestore";
+import Link from 'next/link';
+import React from 'react'
 
-function VideoList({ id, showVideo,username }) {
-  const [video, setVideo] = useState([]);
-  const [likevideo, setLikeVideo] = useState([]);
-  useEffect(() => {
-		if (id) {
-			if (showVideo && username) {
-				const q = query(collection(db, "tiktot_posts"), where("uid", "==", id));
 
-				const unVideosubscribe = onSnapshot(q, (querySnapshot) => {
-					const video = [];
-					querySnapshot.forEach((doc) => {
-						video.push(doc.data());
-						setVideo(video);
-					});
-				});
+function VideoList({ video, videoId }) {
+	console.log(video);
 
-				return unVideosubscribe;
-			} else {
-				const q = query(collection(db, "tiktot_posts"));
+	return (
+		<Link href={`/detail/${videoId}`}>
+			<div className="w-[20%] h-[50%] mt-5 flex flex-col justify-between items-start shadow-md hover:shadow-xl hover:shadow-gray-500 bg-gray-100 cursor-pointer">
+				<video src={video?.video} className="w-full h-full" />
 
-				const getLike = async () => {
-					const snapshot = await getDocs(q);
-
-					const unLikesubscribe = snapshot.docs.map((doc) => ({
-						...doc.data(),
-						id: doc.id,
-					}));
-
-					unLikesubscribe.map((elem) => {
-						const likedQ = query(
-							collection(db, `tiktot_posts/${elem.id}/like`),
-							where("username", "==", username)
-						);
-
-						const like = onSnapshot(likedQ, (querySnapshot) => {
-							let list = [];
-							querySnapshot.docs.forEach((doc) => {
-                list.push({ ...doc.data(), id: doc.id });
-								setLikeVideo(list);
-							});
-						});
-
-						return like;
-					});
-				};
-				getLike();
-			}
-		}
-	}, [id, showVideo, db, username]);
-  
-
-  // console.log(video)
-
-  // console.log(likevideo);
-  return (
-    <div>
-
-    </div>
-  )
+				<p>{video?.caption}</p>
+			</div>
+		</Link>
+	);
 }
 
 export default VideoList
