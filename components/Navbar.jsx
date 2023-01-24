@@ -114,7 +114,7 @@ const Navbar = () => {
 						<img
 							src={session.user?.image}
 							className="w-10 h-10 border cursor-pointer rounded-full"
-							onClick={() => router.push(`/profile/${session.user?.uid}`)}
+							onClick={() => router.push(`/profile/${session?.user?.uid}`)}
 						/>
 					</Link>
 
