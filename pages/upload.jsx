@@ -5,7 +5,7 @@ import { topics } from '../utils/constants';
 import { useSession } from 'next-auth/react';
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db, storage } from '../firebase'; 
-import { getBlob, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getBlob, getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar'
@@ -34,19 +34,14 @@ const Upload = () => {
 
       		setVideoAsset(selectedFile);
 			
-
-    	// var videoUrl = URL.createObjectURL(selectedFile);
-
-			reader.readAsDataURL(selectedFile);
-
-		reader.onload = (e) => {
-				console.log(e.target)
-					setVideoURL(e.target.result);
-
-			}
-
-
-			// console.log(url);
+			 const storageRef = ref(storage, `tiktot/${session.user.uid}/${Date.now()}-${selectedFile.name}`);
+		   
+		uploadBytesResumable(storageRef,selectedFile).then(async () => {
+			await getDownloadURL(storageRef).then((url) => {
+				setVideoURL(url);
+			});
+		});
+    	
 		} else {
 			setLoading(false);
 		}
@@ -81,35 +76,12 @@ const Upload = () => {
 		video: videoURL,
         timestamp: serverTimestamp(),
 	  });
-	
-	//    const storageRef = ref(storage, `tiktot/${session.user.uid}/${videoAsset.name}`);
-		   
-	// 	uploadBytes(storageRef, videoURL,"data_url").then(async () => {
-	// 		const downloadURL = await getDownloadURL(storageRef);
-			
-	// 		const xhr = new XMLHttpRequest();
-    // 		xhr.responseType = 'blob';
-    // 		xhr.onload = (event) => {
-    // 		  const blob = xhr.response;
-    // 		};
-    // 		xhr.open('GET', downloadURL);
-	// 		xhr.send();
-			
-	// 		console.log(downloadURL);
-
-
-	// 			// await updateDoc(doc(db, "tiktot_posts", docReff.id), {
-	// 			// 	video: downloadURL,
-	// 			// });
-	// 		});
-	 
-
 		
 
-		  setLoading(false);
-		   toast.success("Post Submitted!");
+	    setLoading(false);
+		toast.success("Post Submitted!");
 
-	  	router.push('/');
+	    router.push('/');
 	  
 	  } catch (error) {
 		setLoading(false);
