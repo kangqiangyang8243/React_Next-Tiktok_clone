@@ -7,11 +7,12 @@ function VideoList({ video, videoId }) {
 
 	return (
 		<Link href={`/detail/${videoId}`}>
-			<div className="w-[100%] h-[25%] sm:w-[50%] sm:h-[35%] md:w-[40%] md:h-[30%] lg:w-[30%] mt-5 flex flex-col justify-between items-start shadow-md hover:shadow-xl hover:shadow-gray-500 bg-gray-100 cursor-pointer">
-        <video src={video?.video} width="100% " />
+			<div className='flex flex-col  w-[100%] lg:w-[30%] lg:h-[35%] border-b-2 pb-5 lg:pb-0 lg:border-none mt-5 cursor-pointer'>
+				<video src={video?.video} className="w-[100%] shadow-md hover:shadow-xl" />
 
 				<p>{video?.caption}</p>
 			</div>
+      
 		</Link>
 	);
 }

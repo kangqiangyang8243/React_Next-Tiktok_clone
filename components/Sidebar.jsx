@@ -9,6 +9,7 @@ import { GoVerified } from "react-icons/go";
 import Discovery from './Discovery';
 import Footer from './Footer';
 import { useSession } from 'next-auth/react';
+import Accounts from './Accounts';
 const Sidebar = () => {
 	const [ShowSidebar, setShowSidebar] = useState(true);
 	const [userInfo, setuserInfo] = useState([]);
@@ -55,7 +56,8 @@ const Sidebar = () => {
 
 	}, [db,session]);
 	
-	// console.log(userInfo);
+	// console.log(userInfo.map((user) => user.id));
+
 	// console.log(session)
 
   return (
@@ -84,13 +86,14 @@ const Sidebar = () => {
 							Suggested accounts
 						</h3>
 
+						<div className='space-y-3'>
 						{session && (
 							<Link href={`/profile/${session.user?.uid}`}>
 								<div className="flex space-x-3 items-center">
 									<img
 										src={session?.user?.image}
 										alt=""
-										className="rounded-full w-7 h-7 lg:w-10 lg:h-10 -ml-[2px] lg:-ml-0"
+										className="rounded-full w-10 h-7 lg:w-10 lg:h-10 -ml-[2px] lg:-ml-0"
 									/>
 
 									<div className="hidden lg:inline">
@@ -107,13 +110,20 @@ const Sidebar = () => {
 							</Link>
 						)}
 
-						{userInfo?.length > 0 &&
-							userInfo?.slice(0,5).map((users) => {
-								<div key={users.id}>
-									users
-								</div>
-							})}
+						{userInfo?.length>0&& userInfo?.slice(0,5).map((user) => (
+							<Accounts
+							user={user}
+							key={user.id}
+
+						/>
+						))}
+						</div>
+								
+					
+						
 					</div>
+
+					
 
 					<Footer />
 				</div>

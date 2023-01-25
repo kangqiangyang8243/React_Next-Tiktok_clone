@@ -3,11 +3,14 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { topics } from '../utils/constants';
 import { useSession } from 'next-auth/react';
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from '../firebase'; 
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { db, storage } from '../firebase'; 
+import { getBlob, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar'
+import { toast } from 'react-toastify';
+import { get } from 'http';
 
 
 const Upload = () => {
@@ -29,13 +32,15 @@ const Upload = () => {
     if (selectedFile) {
 			setLoading(true);
 
-      setVideoAsset(selectedFile);
+      		setVideoAsset(selectedFile);
+			
 
     	// var videoUrl = URL.createObjectURL(selectedFile);
 
 			reader.readAsDataURL(selectedFile);
 
-			reader.onload = (e) => {
+		reader.onload = (e) => {
+				console.log(e.target)
 					setVideoURL(e.target.result);
 
 			}
@@ -52,37 +57,69 @@ const Upload = () => {
 			  // console.log(videoAsset);
 
 	};
-		console.log(videoURL);
+		// console.log(videoURL);
 
 
 
   const handlePost = async() => {
    
-    const docRef = collection(db, "tiktot_posts");
-    
-    if (session) {
-      setLoading(true);
-
-      await addDoc(docRef, {
+	  
+	  
+	  try {
+		setLoading(true);
+		
+	const docRef = collection(db, "tiktot_posts");
+			  
+     const docReff =  await addDoc(docRef, {
         uid: session.user?.uid,
         username: session.user?.username,
         name: session.user?.name,
         email: session.user?.email,
         userImg: session.user?.image,
         caption: caption,
-				topic: topic,
-				video: videoURL,
+		topic: topic,
+		video: videoURL,
         timestamp: serverTimestamp(),
-      });
+	  });
+	
+	//    const storageRef = ref(storage, `tiktot/${session.user.uid}/${videoAsset.name}`);
+		   
+	// 	uploadBytes(storageRef, videoURL,"data_url").then(async () => {
+	// 		const downloadURL = await getDownloadURL(storageRef);
+			
+	// 		const xhr = new XMLHttpRequest();
+    // 		xhr.responseType = 'blob';
+    // 		xhr.onload = (event) => {
+    // 		  const blob = xhr.response;
+    // 		};
+    // 		xhr.open('GET', downloadURL);
+	// 		xhr.send();
+			
+	// 		console.log(downloadURL);
 
-      
 
-		} else {
-			setLoading(false);
-		}
+	// 			// await updateDoc(doc(db, "tiktot_posts", docReff.id), {
+	// 			// 	video: downloadURL,
+	// 			// });
+	// 		});
+	 
 
+		
+
+		  setLoading(false);
+		   toast.success("Post Submitted!");
+
+	  	router.push('/');
+	  
+	  } catch (error) {
 		setLoading(false);
-		router.push('/');
+		toast.error("Something went wrong!",error.message);
+
+
+	  }
+    
+    
+	  
   }; 
 
 
@@ -91,7 +128,9 @@ const Upload = () => {
      setVideoAsset(undefined);
      setVideoURL("");
 			setCaption("");
-			setTopic("");
+	   setTopic("");
+	   toast.success("Post Discarded!");
+
   };
   
 
@@ -149,7 +188,8 @@ const Upload = () => {
 												name="upload video"
 												hidden
 												accept="video/mp4,video/x-m4v,video/*"
-												onChange={(e) => uploadVideo(e)}
+												  onChange={(e) => uploadVideo(e)}
+												
 											/>
 										</label>
 									</div>

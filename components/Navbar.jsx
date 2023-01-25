@@ -15,7 +15,6 @@ const Navbar = () => {
 	const router = useRouter();
 	const [Input, setInput] = useState("");
 	const [users, setusers] = useState([])
-	const [search, setsearch] = useState([])
 
 	useEffect(() => {
 		if (session) {
@@ -60,12 +59,21 @@ const Navbar = () => {
 	const handleSearch = async(e) => {
 		e.preventDefault();
 
-		setsearch(users?.filter((user) => user.username.toLowerCase().includes(Input)));
+		const searchInput = Input;
+
+		console.log(searchInput);
+
+
+		router.push(`/search/${searchInput}`);
+		
+		setInput("");
+
+		
+    
 
 	};
 
 		
-	console.log(search);
 		
 
 	
