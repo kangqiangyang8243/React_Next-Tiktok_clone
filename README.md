@@ -2,6 +2,16 @@
 
 This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.2)](https://tailwindcss.com/blog/tailwindcss-v3-2) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
 
+Feature:
+  - User Sign In/Up with Google
+  - Search Function == search Users/Videos
+  - Upload Video == Browser Video when Uploading
+  - User Profile ==> Post Video and Like Video
+  - Like and Comment the Vdeo
+  - Navigate different pages and show the video based on the Categories of Sidebar (Development, Game..)
+  - Show other Users in Suggestion Account Section
+  
+
 ## Deploy your own
 
 Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
