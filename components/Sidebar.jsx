@@ -61,7 +61,7 @@ const Sidebar = () => {
 	// console.log(session)
 
   return (
-		<div className="flex flex-col space-y-3 border-r-2 h-full w-[70px] lg:w-[400px] overflow-y-scroll">
+		<div className="flex flex-col space-y-3 border-r-2 h-full w-[70px] lg:w-[400px] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-gray-100">
 			<div
 				className="cursor-pointer lg:hidden text-2xl px-5 pt-3"
 				onClick={() => setShowSidebar(!ShowSidebar)}>
@@ -86,44 +86,36 @@ const Sidebar = () => {
 							Suggested accounts
 						</h3>
 
-						<div className='space-y-3'>
-						{session && (
-							<Link href={`/profile/${session.user?.uid}`}>
-								<div className="flex space-x-3 items-center">
-									<img
-										src={session?.user?.image}
-										alt=""
-										className="rounded-full w-10 h-7 lg:w-10 lg:h-10 -ml-[2px] lg:-ml-0"
-									/>
+						<div className="space-y-3">
+							{session && (
+								<Link href={`/profile/${session.user?.uid}`}>
+									<div className="flex space-x-3 items-center cursor-pointer">
+										<img
+											src={session?.user?.image}
+											alt=""
+											className="rounded-full w-10 h-7 lg:w-10 lg:h-10 -ml-[2px] lg:-ml-0"
+										/>
 
-									<div className="hidden lg:inline">
-										<p className="flex items-center	font-semibold text-lg gap-2">
-											{session?.user?.name}
-											<GoVerified className="text-blue-500" />
-										</p>
-										<p className="text-gray-500 text-sm">
-											{session?.user?.username}
-											{session?.user?.uid?.slice(0, 4)}
-										</p>
+										<div className="hidden lg:inline">
+											<p className="flex items-center	font-semibold text-lg gap-2">
+												{session?.user?.name}
+												<GoVerified className="text-blue-500" />
+											</p>
+											<p className="text-gray-500 text-sm">
+												{session?.user?.username}
+												{session?.user?.uid?.slice(0, 4)}
+											</p>
+										</div>
 									</div>
-								</div>
-							</Link>
-						)}
+								</Link>
+							)}
 
-						{userInfo?.length>0&& userInfo?.slice(0,5).map((user) => (
-							<Accounts
-							user={user}
-							key={user.id}
-
-						/>
-						))}
+							{userInfo?.length > 0 &&
+								userInfo
+									?.slice(0, 5)
+									.map((user) => <Accounts user={user} key={user.id} />)}
 						</div>
-								
-					
-						
 					</div>
-
-					
 
 					<Footer />
 				</div>

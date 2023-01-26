@@ -7,10 +7,10 @@ function VideoList({ video, videoId }) {
 
 	return (
 		<Link href={`/detail/${videoId}`}>
-			<div className="w-full h-full">
-				<video src={video?.video} className="shadow-md hover:shadow-xl" />
+			<div className='flex flex-col border-b-2 pb-10 md:pb-0 items-center space-y-5 md:space-y-0 my-5 md:border-none'>
+				<video src={video?.video} className="h-full  shadow-md rounded-lg hover:shadow-xl" />
 
-				<p>{video?.caption}</p>
+				<p className='text-xl md:text-lg'>{video?.caption}</p>
 			</div>
 		</Link>
 	);
