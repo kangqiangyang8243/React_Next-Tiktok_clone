@@ -65,7 +65,7 @@ function Profile() {
         const unLikeUnscribe = onSnapshot(q, (querySnapshot) => {
           const video = [];
           querySnapshot.forEach((doc) => {
-            video.push({ ...doc.data(), videoId: doc.id });
+            video.push({ ...doc.data() });
             setLikeVideo(video);
           });
         });
@@ -116,18 +116,16 @@ function Profile() {
               <div className="flex items-center space-x-10 text-gray-500 text-xl border-b">
                 <p
                   onClick={() => setshowVideo(true)}
-                  className={`ml-14 cursor-pointer ${
-                    showVideo && `border-b-2 border-black font-bold text-black`
-                  }`}
+                  className={`ml-14 cursor-pointer ${showVideo && `border-b-2 border-black font-bold text-black`
+                    }`}
                 >
                   Videos
                 </p>
 
                 <p
                   onClick={() => setshowVideo(false)}
-                  className={`ml-14 cursor-pointer ${
-                    !showVideo && `border-b-2 border-black font-bold text-black`
-                  }`}
+                  className={`ml-14 cursor-pointer ${!showVideo && `border-b-2 border-black font-bold text-black`
+                    }`}
                 >
                   Liked
                 </p>
@@ -156,7 +154,7 @@ function Profile() {
                 {likevideo?.length > 0 ? (
                   <div className="flex  flex-wrap justify-start gap-5 w-full h-full overflow-y-scroll px-12">
                     {likevideo.map((video) => (
-                      <VideoList key={video.videoId} video={video} />
+                      <VideoList key={video.videoId} video={video} videoId={video.videoId} />
                     ))}
                   </div>
                 ) : (

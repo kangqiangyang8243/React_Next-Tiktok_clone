@@ -9,7 +9,7 @@ function LikeBtn({ id }) {
 	const [likes, setLikes] = useState([]);
 	const [hasLike, setHasLike] = useState(false);
 	const [videos, setVideos] = useState([]);
-
+	// console.log(id);
   useEffect(() => {
 		if (id) {
 						

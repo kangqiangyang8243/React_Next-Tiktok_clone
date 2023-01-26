@@ -5,12 +5,11 @@ import { topics } from '../utils/constants';
 import { useSession } from 'next-auth/react';
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db, storage } from '../firebase'; 
-import { getBlob, getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import {  getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar'
 import { toast } from 'react-toastify';
-import { get } from 'http';
 
 
 const Upload = () => {
@@ -65,21 +64,21 @@ const Upload = () => {
 		
 	const docRef = collection(db, "tiktot_posts");
 			  
-     const docReff =  await addDoc(docRef, {
+      await addDoc(docRef, {
         uid: session.user?.uid,
         username: session.user?.username,
         name: session.user?.name,
         email: session.user?.email,
         userImg: session.user?.image,
         caption: caption,
-		topic: topic,
-		video: videoURL,
+				topic: topic,
+				video: videoURL,
         timestamp: serverTimestamp(),
 	  });
 		
 
 	    setLoading(false);
-		toast.success("Post Submitted!");
+			toast.success("Post Submitted!");
 
 	    router.push('/');
 	  
