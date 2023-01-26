@@ -136,7 +136,7 @@ function Profile() {
             {showVideo ? (
               <>
                 {videos?.length > 0 ? (
-                  <div className="flex  flex-wrap justify-start gap-5 w-full h-full overflow-y-scroll px-12">
+                  <div className="grid grid-cols-3 gap-5 overflow-y-scroll px-12">
                     {videos.map((video) => (
                       <VideoList
                         video={video}
@@ -152,7 +152,7 @@ function Profile() {
             ) : (
               <>
                 {likevideo?.length > 0 ? (
-                  <div className="flex  flex-wrap justify-start gap-5 w-full h-full overflow-y-scroll px-12">
+                  <div className="grid grid-cols-3  gap-5 overflow-y-scroll px-12">
                     {likevideo.map((video) => (
                       <VideoList key={video.videoId} video={video} videoId={video.videoId} />
                     ))}
