@@ -97,7 +97,7 @@ const Navbar = () => {
 				className="bg-gray-200  hidden md:inline-flex items-center p-2 rounded-full space-x-2 w-[30%]">
 				<input
 					value={Input}
-					onChange={(e)=>setInput(e.target.value)}
+					onChange={(e) => setInput(e.target.value)}
 					type="text"
 					placeholder="Search"
 					className="outline-none bg-transparent pl-2 border-r-2 border-gray-300 w-full"
@@ -112,17 +112,16 @@ const Navbar = () => {
 			{session ? (
 				<div className="flex items-center space-x-5 mr-5">
 					<div
-						onClick={() => router.push("/upload")}
+						onClick={() => router.push(`/upload`)}
 						className="flex items-center space-x-2 border-2 border-gray-200 p-2 cursor-pointer text-lg font-semibold hover:bg-gray-300 rounded-md ">
 						<IoMdAdd color="black" fontSize={21} fontWeight="bold" />
 						<p className="hidden md:inline-flex">Upload</p>
 					</div>
 
-					<Link href="/">
+					<Link href={`/profile/${session?.user?.uid}`}>
 						<img
 							src={session.user?.image}
 							className="w-10 h-10 border cursor-pointer rounded-full"
-							onClick={() => router.push(`/profile/${session?.user?.uid}`)}
 						/>
 					</Link>
 
