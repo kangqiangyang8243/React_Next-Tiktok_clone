@@ -10,6 +10,7 @@ Feature:
   - Like and Comment the Vdeo
   - Navigate different pages and show the video based on the Categories of Sidebar (Development, Game..)
   - Show other Users in Suggestion Account Section
+  - Fully Responsive Pages
   
 
 ## Deploy your own
